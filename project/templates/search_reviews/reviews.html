@@ -1,0 +1,73 @@
+<!-- Подключение шаблона страницы -->
+{% extends "base.html" %}
+<!-- Название вкладки страницы -->
+{% block title %}{{ university.abbreviated }}{% endblock title %}
+<!-- Заголовок страницы -->
+{% block header %}{{ university.abbreviated }}{% endblock header %}
+<!-- Контент страницы с основной информацией -->
+{% block content_center %}
+<div class="row justify-content-center" style="margin-top: 120px; margin-bottom: 60px;">
+  <div class="card mb-12 border-0">
+    <div class="row g-0">
+      <div class="col-md-3">
+        {% if university.logo %}
+          <img src="/static/img/logo/{{ university.logo }}" alt="{{ university.name }}" class="align-self-center mr-5" style="margin-left: 30px;" width="200" height="200">
+        {% else %}
+          <img src="/static/img/rocket-startup.png" alt="{{ university.name }}" class="align-self-center mr-5" style="margin-left: 30px;" width="200" height="200">
+        {% endif %}
+      </div>
+      <div class="col-md-9">
+        <div class="card-body">
+          <h2 class="mt-0">{{ university.abbreviated }}</h2>
+          <h3>{{ university.name }}</h3>
+          <br>
+          <p style="font-size: 16pt;">
+            <span class="badge rounded bg-secondary" style="font-weight: 100">Кол-во отзывов : {{ count_opinions }}</span>
+            <span class="badge rounded bg-success" style="font-weight: 100">Положительные : {{ positive_opinions }}</span>
+            <span class="badge rounded bg-danger" style="font-weight: 100">Отрицательные : {{ negative_opinions }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <img src="/static/img/diagr.PNG">
+</div>
+{% endblock content_center %}
+
+{% block content_end %}
+<div class="row justify-content-center">
+  <div class="row row-cols-1 g-4">
+    {% for opinion in page_obj %}
+    <div class="col">
+      {% if  opinion.status == "True" %}
+        <div class="card col-12 text-black" style="background-color: #bde0d4;">
+          <div class="card-header text-center"><h4>Положительный отзыв</h4></div>
+      {% else %}
+        <div class="card col-12 text-black" style="background-color:#f5bca7;">
+          <div class="card-header text-center"><h4>Отрицательный отзыв</h4></div>
+      {% endif %}
+          <div class="card-body">
+            <p class="card-text">{{ opinion.text }}</p>
+          </div>
+          <div class="card-footer bg-transparent text-center">{{ opinion.date_opinion }}</div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col col-12 g-4 title_page">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-text">Пока нет ни одного отзыва.</h5>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content_end %}
+
+{% block footer %}
+
+<!-- Пагинация для перемещения по списку университетов -->
+{% include "search_reviews\paginator.html" %}
+
+{% endblock footer %}
