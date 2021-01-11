@@ -38,6 +38,8 @@ def changing_data_universities():
 def changing_data_opinions():
     #   Удалить отзывы об университетах из таблицы
     delete_opinions()
+    #   Сброс значения автоинкремена до 1 у таблицы Opinions
+    reset_auto_increment_opinions()
     #   Взять из базы список университетов
     cursor.execute("SELECT * from search_reviews_universities")
     all_universities = cursor.fetchall()
@@ -123,10 +125,13 @@ def adding_opinions(text, date_opinion, status, id_university):
     cursor.execute("INSERT INTO search_reviews_opinions(text, date_opinion, status, university_id) VALUES (?,?,?,?)", 
                         (text, date_opinion, status, id_university))
 
-
 #   Сброс значения автоинкремена до 1 у таблицы Universities
 def reset_auto_increment_universities():
     cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='search_reviews_universities'")
+
+#   Сброс значения автоинкремена до 1 у таблицы Universities
+def reset_auto_increment_opinions():
+    cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='search_reviews_opinions'")
 
 #   Удалить все университеты из базы
 def delete_universities():
