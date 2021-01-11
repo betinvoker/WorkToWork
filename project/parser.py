@@ -14,29 +14,30 @@ conn = sqlite3.connect('db.sqlite3')
 cursor = conn.cursor()
 
 def main():
-    #   Проверить и заполнить таблицу Universities.
-    changing_the_table_universities()
-    #   Проверить и заполнить таблици Opinions. 
-    filling_in_the_table_opinions()
+    #   Удалить все записи и заполнить таблицу Universities.
+    changing_data_universities()
+    #   Удалить все записи и заполнить таблици Opinions. 
+    changing_data_opinions()
     #   Закрыть браузер после выполнения
     driver.close()
 
-#   Проверить таблицу Universities на заполненность и заполнить.
-def changing_the_table_universities():
+#   Удалить все записи и заполнить таблицу Universities.
+def changing_data_universities():
+    #   Удалить данные об университетах из таблицы
+    delete_universities()
+    #   Сброс значения автоинкремена до 1 у таблицы Universities
+    reset_auto_increment_universities()
     #   Главная страница сайта
     driver.get("https://tabiturient.ru/")
     #   Нажимать на кнопку загрузить еще, пока она существует на странице
     click_btn('mobpadd20', '/html/body/div[1]/div[2]/div[1]/div/div[5]')
-    #   Найти общее количество университетов
-    all_universities = len(driver.find_elements_by_class_name('mobpadd20'))
-    #   Берем количество записей из таблицы Universities и присваиваем его переменной
-    cursor.execute("SELECT COUNT(*) FROM search_reviews_universities")
-    count_universities = int(cursor.fetchone()[0])
-    #   Условия при которых будут собираться данные
-    conditional_actions_of_universities(count_universities, all_universities)
+    #   Парсить данные об университетах со страницы
+    parse_list_of_universities()
 
-#   Проверить таблицу Opinions на заполненность и заполнить.
-def filling_in_the_table_opinions():
+#   Удалить все записи и заполнить таблици Opinions. 
+def changing_data_opinions():
+    #   Удалить отзывы об университетах из таблицы
+    delete_opinions()
     #   Взять из базы список университетов
     cursor.execute("SELECT * from search_reviews_universities")
     all_universities = cursor.fetchall()
@@ -47,51 +48,8 @@ def filling_in_the_table_opinions():
         #   Нажимать на кнопку загрузить еще, пока она существует на странице
         click_btn('mobpadd10', '/html/body/div[1]/div[2]/div[1]/div/div[7]')
         time.sleep(5)
-        #   Найти общее количество отзывов
-        all_opinions = int(len(list(driver.find_elements_by_class_name('mobpadd20-2'))))
-        #   Берем количество записей из таблицы Opinions и присваиваем его переменной
-        cursor.execute("SELECT search_reviews_universities.id, COUNT(search_reviews_opinions.university_id) FROM search_reviews_universities LEFT JOIN search_reviews_opinions ON search_reviews_universities.id = search_reviews_opinions.university_id WHERE search_reviews_universities.id = "  + str(university[0]) + " GROUP BY search_reviews_universities.id")
-        count_opinions = int(cursor.fetchone()[1])
-        #   Условия при которых будут собираться данные
-        conditional_actions_of_opinions(count_opinions, all_opinions, university)
-
-    print("----- Заполнение таблицы завешено -----\n")
-
-#   Условия при которых будут собираться данные
-def conditional_actions_of_universities(count_universities, all_universities):
-    print("----- Таблица Universities содержит - " + str(count_universities) + " записей из "+ str(all_universities) +" -----\n")
-
-    if count_universities == 0 and all_universities != 0:
-        print("--- В таблице нет записей, происодит заполнение таблицы.\n")
-        parse_list_of_universities()
-    elif all_universities == 0:
-        print("--- На сайте нет записей об университетах.\n")
-    elif count_universities < all_universities:
-        #   Пока не придумал, что должно тут выводиться
-        print("--- Записей в таблице меньше, чем на сайте.\n")
-    elif count_universities > all_universities:
-        print("--- В таблице больше записей чем на сайте, это странно!\n")
-    elif count_universities == all_universities:
-        print("--- Все хорошо, обновлений нет.\n")
-
-    print("----- Заполнение таблицы завешено -----\n")
-
-#   Условия при которых будут собираться данные
-def conditional_actions_of_opinions(count_opinions, all_opinions, university):
-    print("----- " + str(university[1]) + " | Кол-во отзывов - " + str(count_opinions) + "/" + str(all_opinions) + " -----\n")
-
-    if count_opinions == 0 and all_opinions != 0:
-        print("--- В таблице нет записей, происодит заполнение таблицы.\n")
+        #   Парсить данные с отзывами об университете
         parse_list_of_opinions(university[0])
-    elif all_opinions == 0:
-        print("--- На сайте нет отзывов об " + str(university[1]) + ".\n")
-    elif count_opinions < all_opinions:
-        #   Пока не придумал, что должно тут выводиться
-        print("--- Записей в таблице меньше, чем на сайте.\n")
-    elif count_opinions > all_opinions:
-        print("--- В таблице больше записей чем на сайте, это странно!\n")
-    elif count_opinions == all_opinions:
-        print("--- Все хорошо, обновлений нет.\n")
 
 #   Парсить данные об университетах со страницы
 def parse_list_of_universities():  
@@ -164,6 +122,19 @@ def adding_universities(abbreviated, full_name, link, logo):
 def adding_opinions(text, date_opinion, status, id_university):
     cursor.execute("INSERT INTO search_reviews_opinions(text, date_opinion, status, university_id) VALUES (?,?,?,?)", 
                         (text, date_opinion, status, id_university))
+
+
+#   Сброс значения автоинкремена до 1 у таблицы Universities
+def reset_auto_increment_universities():
+    cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='search_reviews_universities'")
+
+#   Удалить все университеты из базы
+def delete_universities():
+    cursor.execute("DELETE FROM search_reviews_universities")
+       
+#   Удалить все отзывы из базы
+def delete_opinions():
+    cursor.execute("DELETE FROM search_reviews_opinions")                        
 
 #   Нажимать на кнопку загрузить еще, пока она существует на странице
 def click_btn(data_block, button):
