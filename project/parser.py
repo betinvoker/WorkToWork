@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import sqlite3
@@ -7,7 +8,9 @@ import os
 import time
 
 path = r"chromedriver.exe"
-driver = webdriver.Chrome(executable_path=path)
+options = Options()
+options.headless = True
+driver = webdriver.Chrome(executable_path=path, chrome_options=options)
 
 conn = sqlite3.connect('db.sqlite3')
 #   Создать соединение с базой
