@@ -78,7 +78,7 @@ def parse_list_of_universities():
 #   Парсить данные с отзывами об университете
 def parse_list_of_opinions(university):
     block = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[1]/div/div[5]')
-    all_opinions = reversed(block.find_elements_by_class_name('mobpadd20-2'))
+    all_opinions = reversed(driver.find_elements_by_class_name('mobpadd20-2'))
 
     index = 1
     #   Цикл сбора данных и записи данных отзыва

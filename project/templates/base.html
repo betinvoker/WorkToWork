@@ -10,23 +10,13 @@
 </head>
 <body>
     <header class="container">
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <a class="navbar-brand" href="/" style="margin-left: 30px;"><h4>Университеты</h4></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
-              <form class="d-flex">
-                <input class="form-control me-2" type="text" placeholder="Найти..." aria-label="Найти...">
-                <button class="btn btn-outline-success me-4" type="submit">Поиск</button>
-              </form>
-            </div>
-        </nav>
+      <!-- Навигационная панель -->
+      {% include "search_reviews\navbar.html" %}
     </header>
 
     <div class="container">
-        {% block content_center %}
-        {% endblock content_center %}
+      {% block content_center %}
+      {% endblock content_center %}
     </div>
 
     <div class="container">
@@ -35,12 +25,13 @@
     </div>
 
     <footer class="container">
-        {% block footer %}
-        {% endblock footer %}
+      {% block footer %}
+      {% endblock footer %}
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-</body>
+
+  </body>
 </html>
