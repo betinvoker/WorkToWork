@@ -8,7 +8,7 @@ class UniversitiesInline(admin.TabularInline):
 @admin.register(Universities)
 class UniversitiesAdmin(admin.ModelAdmin):
     list_display = ("id", "abbreviated", "name", "link", "logo")
-    search_fields = ("abbreviated",)
+    search_fields = ("name",)
     #   Показывает комментарии относящиеся к выбранному университету
     inlines = [UniversitiesInline]
 
