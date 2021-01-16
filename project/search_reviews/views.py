@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View, DetailView, ListView
 from django.views.generic.base import ContextMixin
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Universities, Opinions
+from django.db.models import Q
 
 #   Главная страница
 class UniversitiesListView(ListView):
@@ -30,22 +31,24 @@ class UniversitiesListView(ListView):
         return context
 
 #   Выбранный университет
-def reviews(request, id):
-    university = Universities.objects.get(pk = id)
-    opinions = Opinions.objects.filter(university_id = id)
-    count_opinions = Opinions.objects.filter(university_id = id).count
-    positive_opinions = Opinions.objects.filter(university_id = id).filter(status = "True").count
-    negative_opinions = Opinions.objects.filter(university_id = id).filter(status = "False").count
-    #   Пагинатор выбирает из таблицы Universities 8 университета и выводит их на страницу
-    paginator = Paginator(opinions, 5, orphans = 2)
+class OpinionsView(View):
+    def get(self, request, id):
+        university = Universities.objects.get(id=id)
+        opinions = Opinions.objects.filter(university_id = id)
+        count_opinions = Opinions.objects.filter(university_id = id).count
+        positive_opinions = Opinions.objects.filter(university_id = id).filter(status = "True").count
+        negative_opinions = Opinions.objects.filter(university_id = id).filter(status = "False").count
 
-    page_number = request.GET.get('page')
-    try:
-        page_obj = paginator.page(page_number)
-    except PageNotAnInteger:
-        page_obj = paginator.page(1)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
+        #   Пагинатор выбирает из таблицы Universities 8 университета и выводит их на страницу
+        paginator = Paginator(opinions, 5, orphans = 2)
 
-    return render(request, "search_reviews/reviews.html", context = { "page_obj" : page_obj, "university" : university, "opinions" : opinions, 
-        "count_opinions" : count_opinions, "positive_opinions" : positive_opinions, "negative_opinions" : negative_opinions })
+        page_number = request.GET.get('page')
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        return render(request, "search_reviews/reviews.html", context = { "page_obj" : page_obj, "university" : university, "opinions" : opinions, 
+            "count_opinions" : count_opinions, "positive_opinions" : positive_opinions, "negative_opinions" : negative_opinions })

@@ -67,7 +67,7 @@ def parse_list_of_universities():
         #   Взять из блока данные об университете
         dict_university = take_data_university(university, index)
         
-        print(dict_university.get('abbreviation') + " | " + dict_university.get('full_name') + " | " + dict_university.get('link') + " | " + dict_university.get('logo') + "\n")
+        print("%s | %s | %s | %s\n" % (dict_university.get('abbreviation'), dict_university.get('full_name'), dict_university.get('link'), dict_university.get('logo')))
         adding_universities(dict_university.get('abbreviation'), dict_university.get('full_name'), dict_university.get('link'), dict_university.get('logo'))
 
         dict_university.clear()
@@ -88,7 +88,7 @@ def parse_list_of_opinions(university):
         #   Взять из блока данные об отзыве
         dict_opinion = take_data_opinion(university, opinion, index)
 
-        print(dict_opinion.get('text') + " | " + dict_opinion.get('date_opinion') + " | " + dict_opinion.get('status') + " | " + dict_opinion.get('id_university') + "\n")
+        print("%s | %s | %s | %s\n" % (dict_opinion.get('text'), dict_opinion.get('date_opinion'), dict_opinion.get('status'), dict_opinion.get('id_university')))
         adding_opinions(dict_opinion.get('text'), dict_opinion.get('date_opinion'), dict_opinion.get('status'), dict_opinion.get('id_university'))
         
         dict_opinion.clear()

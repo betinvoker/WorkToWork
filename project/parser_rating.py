@@ -13,23 +13,19 @@ driver = webdriver.Chrome(executable_path=path)
 def main():
     driver.get("https://academia.interfax.ru/ru/ratings/?rating=1&year=2020&page=1")
 
-    pagination = driver.find_element_by_class_name('pagination')
-    pages = pagination.find_elements_by_class_name('text')
+    block = driver.find_element_by_class_name('main')
+    universiteties = block.find_elements_by_class_name('-rating')
+    
+    i = 1
 
-    for page in pages:
-        block = driver.find_element_by_class_name('main')
-        universiteties = block.find_elements_by_class_name('-rating')
-        
-        for university in universiteties:
-            position = university.find_element_by_class_name('position')
-            name = university.find_element_by_class_name('name')
+    for university in universiteties:
+        position = university.find_element_by_class_name('position')
+        name = university.find_element_by_class_name('name')
+        link = university.find_element_by_xpath('/html/body/div[1]/div[4]/div/section/main/div/div[%s]/a' % i)
 
-            print("%s|%s\n" % (position.text, name.text))
+        print("%s|%s|%s\n" % (position.text, name.text, link.get_attribute("href")))
 
-        driver.get("https://academia.interfax.ru/ru/ratings/?rating=1&year=2020&page=" + page.text)
-
-
-
+        i += 1
 
 if __name__ == "__main__":
     main()
