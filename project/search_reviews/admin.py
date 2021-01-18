@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Universities, Opinions
+from .models import Universities, Opinions, Ratings
 
 #   Показывает комментарии относящиеся к выбранному университету
 class UniversitiesInline(admin.TabularInline):
@@ -17,3 +17,10 @@ class OpinionsAdmin(admin.ModelAdmin):
     list_display = ("id", "text", "date_opinion", "status", "status_ai", "university_id")
     list_filter = ("status",)
     search_fields = ("text",)
+
+@admin.register(Ratings)
+class RatingsAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "link")
+    list_filter = ("name",)
+    search_fields = ("name",)
+

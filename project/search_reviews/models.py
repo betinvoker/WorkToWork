@@ -27,3 +27,14 @@ class Opinions(models.Model):
 
     def __str__(self):
         return f"{self.id}, {self.text}, {self.date_opinion}, {self.status}, {self.status_ai}, {self.university}"
+
+class Ratings(models.Model):
+    name = models.TextField(verbose_name="Название университета", null=False)
+    link = models.TextField(verbose_name="Ссылка на его страницу", null=False)
+
+    class Meta:
+        verbose_name = "Рейтинги университета"
+        verbose_name_plural = "Рейтинги университетов"
+
+    def __str__(self):
+        return f"{self.id}, {self.name}, {self.link}"

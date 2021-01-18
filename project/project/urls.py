@@ -6,6 +6,6 @@ from search_reviews import views
 
 urlpatterns = [
     path('', views.UniversitiesListView.as_view(), name='review'),
-    path('review/<int:id>/', views.OpinionsView.as_view(), name='review'),
+    path('review/<int:id>/', views.OpinionsListView.as_view(), name='review'),
     path('admin/', admin.site.urls),
 ]

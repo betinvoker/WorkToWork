@@ -31,7 +31,7 @@ class UniversitiesListView(ListView):
         return context
 
 #   Выбранный университет
-class OpinionsView(ListView):
+class OpinionsListView(ListView):
     context_object_name = 'university'
     template_name = "search_reviews/reviews.html"
 
