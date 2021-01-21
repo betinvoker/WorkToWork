@@ -61,38 +61,34 @@ def parse_list_of_universities():
     block = driver.find_element_by_id('resultdiv0')
     all_universities = block.find_elements_by_class_name('mobpadd20')
 
-    index = 1
     #   Цикл сбора данных и записи данных об университете
     for university in all_universities:
         #   Взять из блока данные об университете
-        dict_university = take_data_university(university, index)
+        dict_university = take_data_university(university, all_universities.index(university) + 1)
         
         print("%s | %s | %s | %s\n" % (dict_university.get('abbreviation'), dict_university.get('full_name'), dict_university.get('link'), dict_university.get('logo')))
         adding_universities(dict_university.get('abbreviation'), dict_university.get('full_name'), dict_university.get('link'), dict_university.get('logo'))
 
         dict_university.clear()
-        index += 1
     #   Сохранить изменения в базе
     conn.commit()
 
 #   Парсить данные с отзывами об университете
 def parse_list_of_opinions(university):
     block = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[1]/div/div[5]')
-    all_opinions = reversed(driver.find_elements_by_class_name('mobpadd20-2'))
+    all_opinions = driver.find_elements_by_class_name('mobpadd20-2')
 
-    index = 1
     #   Цикл сбора данных и записи данных отзыва
     for opinion in all_opinions:
         #   Нажимать на ссылку "Показать полностью..."
-        click_on_show_link(opinion, '/html/body/div[1]/div[2]/div[1]/div/div[5]/div[' + str(index) + ']/div[1]/div[2]/b')
+        click_on_show_link(opinion, '/html/body/div[1]/div[2]/div[1]/div/div[5]/div[' + str(all_opinions.index(opinion) + 1) + ']/div[1]/div[2]/b')
         #   Взять из блока данные об отзыве
-        dict_opinion = take_data_opinion(university, opinion, index)
+        dict_opinion = take_data_opinion(university, opinion, all_opinions.index(opinion) + 1)
 
         print("%s | %s | %s | %s\n" % (dict_opinion.get('text'), dict_opinion.get('date_opinion'), dict_opinion.get('status'), dict_opinion.get('id_university')))
         adding_opinions(dict_opinion.get('text'), dict_opinion.get('date_opinion'), dict_opinion.get('status'), dict_opinion.get('id_university'))
         
         dict_opinion.clear()
-        index += 1
     #   Сохранить изменения в базе
     conn.commit()
 
