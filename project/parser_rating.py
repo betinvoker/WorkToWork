@@ -16,8 +16,8 @@ cursor = conn.cursor()
 
 def main():
     driver.get("https://academia.interfax.ru/ru/ratings/?rating=0&page=1")
-    #   Удалить все университеты из базы
     delete_universities()
+    reset_auto_increment_opinions()
     #   Заполнение таблицы
     parse_universities()
     #   Закрыть браузер после выполнения
@@ -58,6 +58,10 @@ def adding_universities(name, link):
 #   Удалить все университеты из базы
 def delete_universities():
     cursor.execute("DELETE FROM search_reviews_ratings")
+
+#   Сброс значения автоинкремена до 1 у таблицы Rating
+def reset_auto_increment_opinions():
+    cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='search_reviews_ratings'")
 
 if __name__ == "__main__":
     main()

@@ -20,7 +20,6 @@ class OpinionsAdmin(admin.ModelAdmin):
 
 @admin.register(Ratings)
 class RatingsAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "link")
-    list_filter = ("name",)
+    list_display = ("id", "name", "link", "rating_summary", "rating_education", "rating_brand", "rating_research", "rating_socialization", "rating_internationalization", "rating_innovation")
     search_fields = ("name",)
 
