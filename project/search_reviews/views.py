@@ -4,7 +4,7 @@ from django.views.generic import View, DetailView, ListView
 from django.views.generic.base import ContextMixin
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Universities, Opinions
+from .models import Universities, Opinions, Ratings
 from django.db.models import Q
 
 #   Главная страница
@@ -55,3 +55,9 @@ class OpinionsListView(ListView):
 
         return render(request, "search_reviews/reviews.html", context = { "page_obj" : page_obj, "university" : university, "opinions" : opinions, 
             "count_opinions" : count_opinions, "positive_opinions" : positive_opinions, "negative_opinions" : negative_opinions })
+
+
+def rating_universities(request):
+    rating = Ratings.objects.all()
+
+    return render(request, "search_reviews/rating_universities.html", context = {"rating" : rating})

@@ -1,0 +1,45 @@
+<!-- Подключение шаблона страницы -->
+{% extends "base.html" %}
+<!-- Название вкладки страницы -->
+{% block title %}Рейтинг университетов{% endblock title %}
+<!-- Заголовок страницы -->
+{% block header %}Рейтинг университетов{% endblock header %}
+<!-- Контент страницы с основной информацией -->
+{% block content_center %}
+<div class="row justify-content-center" style="margin-top: 80px;">
+    <p class="display-3">
+        Национальный рейтинг университетов
+    </p>
+</div>
+
+<table class="table table-bordered border-secondary">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Название</th>
+            <th scope="col">Сводный рейтинг</th>
+            <th scope="col">Образование</th>
+            <th scope="col">Бренд</th>
+            <th scope="col">Исследования</th>
+            <th scope="col">Социализация</th>
+            <th scope="col">Интернационализация</th>
+            <th scope="col">Инновации</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for university in rating %}
+        <tr>
+          <th scope="row">{{university.id}}</th>
+          <td>{{university.name}}</td>
+          <td>{{university.rating_summary}}</td>
+          <td>{{university.rating_education}}</td>
+          <td>{{university.rating_brand}}</td>
+          <td>{{university.rating_research}}</td>
+          <td>{{university.rating_socialization}}</td>
+          <td>{{university.rating_internationalization}}</td>
+          <td>{{university.rating_innovation}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
