@@ -58,8 +58,14 @@ class OpinionsListView(ListView):
 #   Рейтинг университетов по версии ИНТЕРФАКС
 class RatingUniversitiesView(View):
     def get(self, request):
-        order = request.GET.get('order', '-rating_summary')
+        search_query = request.GET.get('search', '')
+        order = request.GET.get('order', 'name')
 
-        rating = Ratings.objects.all().order_by(order)
+        if search_query:
+            rating = Ratings.objects.filter(query).order_by(order)
+        else:
+            rating = Ratings.objects.all().order_by(order)
 
-        return render(request, "search_reviews/rating_universities.html", context = {"rating" : rating})
+        table_header = Ratings._meta.get_fields()
+
+        return render(request, "search_reviews/rating_universities.html", context = {"table_header" : table_header, "rating" : rating})
