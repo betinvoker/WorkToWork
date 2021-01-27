@@ -18,7 +18,7 @@ class UniversitiesListView(ListView):
         +' FROM search_reviews_universities LEFT JOIN search_reviews_opinions ON search_reviews_universities.id = search_reviews_opinions.university_id'
         +' GROUP BY search_reviews_universities.id')
 
-    paginate_by = 8
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -38,7 +38,6 @@ class OpinionsListView(ListView):
     def get(self, request, id, *args, **kwargs):
         university = Universities.objects.get(id=id)
         opinions = Opinions.objects.filter(university_id = id)
-        count_opinions = Opinions.objects.filter(university_id = id).count
         positive_opinions = Opinions.objects.filter(university_id = id).filter(status = "True").count
         negative_opinions = Opinions.objects.filter(university_id = id).filter(status = "False").count
 
@@ -53,8 +52,8 @@ class OpinionsListView(ListView):
         except EmptyPage:
             page_obj = paginator.page(paginator.num_pages)
 
-        return render(request, "search_reviews/reviews.html", context = { "page_obj" : page_obj, "university" : university, "opinions" : opinions, 
-            "count_opinions" : count_opinions, "positive_opinions" : positive_opinions, "negative_opinions" : negative_opinions })
+        return render(request, "search_reviews/reviews.html", context = { "page_obj" : page_obj, "university" : university, "opinions" : opinions,
+                                 "positive_opinions" : positive_opinions, "negative_opinions" : negative_opinions })
 
 
 def rating_universities(request):

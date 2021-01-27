@@ -16,15 +16,17 @@ cursor = conn.cursor()
 
 def main():
     driver.get("https://academia.interfax.ru/ru/ratings/?rating=0&page=1")
-    delete_universities()
-    reset_auto_increment_opinions()
+    #delete_ratings()
+    #reset_auto_increment_ratings()
     #   Заполнение таблицы
-    parse_universities()
+    #parse_ratings()
+    #   Обновление записей об университете
+    change_ratings()
     #   Закрыть браузер после выполнения
     driver.close()
 
 #   Заполнение таблицы
-def parse_universities():
+def parse_ratings():
     nav = driver.find_element_by_class_name('pagination')
     pages = nav.find_elements_by_class_name('page')
 
@@ -35,7 +37,7 @@ def parse_universities():
         if pages.index(page) > 1:
             for university in universiteties:
                 dict_university = take_data_university(university, universiteties.index(university) + 1)
-                adding_universities(dict_university.get('name'), dict_university.get('link'))
+                adding_rating(dict_university.get('name'), dict_university.get('link'))
                 print("%s|%s\n" % (dict_university.get('name'), dict_university.get('link')))
             driver.get("https://academia.interfax.ru/ru/ratings/?page=%s&rating=0&year=2020" % str(pages.index(page)))
             time.sleep(5)
@@ -47,21 +49,87 @@ def take_data_university(university, index):
     name = university.find_element_by_class_name('name')
     link = university.find_element_by_xpath('/html/body/div[1]/div[4]/div/section/main/div/div[%s]/a' % index)
 
-    dict_university = {'name' : name.text, 'link' : link.get_attribute("href")}
+    dict_university = {'name' : name.text, 'link' : link.get_attribute("href") + "?page=ratings"}
 
     return dict_university
 
 #   Добавить университет в базу
-def adding_universities(name, link):
+def adding_rating(name, link):
     cursor.execute("INSERT INTO search_reviews_ratings(name, link) VALUES (?,?)", (name, link))
 
 #   Удалить все университеты из базы
-def delete_universities():
+def delete_ratings():
     cursor.execute("DELETE FROM search_reviews_ratings")
 
 #   Сброс значения автоинкремена до 1 у таблицы Rating
-def reset_auto_increment_opinions():
+def reset_auto_increment_ratings():
     cursor.execute("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='search_reviews_ratings'")
+
+#   Обновление записей об университете
+def change_ratings():
+    #   Взять из базы список университетов
+    cursor.execute("SELECT * from search_reviews_ratings")
+    all_universities = cursor.fetchall()
+    #   Перебрать все университеты по списку
+    for university in all_universities:
+        #   Cтраница Университета
+        driver.get(university[2])
+        #   Парсить данные с отзывами об университете
+        update_university(university[0])
+        time.sleep(5)
+
+#   Обновление записей об университете
+def update_university(university):
+    ratings = driver.find_elements_by_class_name('card__details')
+
+    dict_rating = {'rating_summary' : None, 'rating_education' : None, 'rating_brand' : None, 'rating_research' : None, 
+        'rating_socialization' : None, 'rating_internationalization' : None, 'rating_innovation' : None}
+
+    for rating in ratings:
+        if rating.find_element_by_class_name('title').text == 'Сводный':
+            dict_rating['rating_summary'] = ' '.join(rating.find_element_by_class_name('subtitle').text.split(' ')[:-1])
+
+        elif rating.find_element_by_class_name('title').text == 'Образование':
+            dict_rating['rating_education'] = ' '.join(rating.find_element_by_class_name('subtitle').text.split(' ')[:-1])
+
+        elif rating.find_element_by_class_name('title').text == 'Бренд':
+            dict_rating['rating_brand'] = ' '.join(rating.find_element_by_class_name('subtitle').text.split(' ')[:-1])
+
+        elif rating.find_element_by_class_name('title').text == 'Исследования':
+            dict_rating['rating_research'] = ' '.join(rating.find_element_by_class_name('subtitle').text.split(' ')[:-1])
+
+        elif rating.find_element_by_class_name('title').text == 'Социализация':
+            dict_rating['rating_socialization'] = ' '.join(rating.find_element_by_class_name('subtitle').text.split(' ')[:-1])
+
+        elif rating.find_element_by_class_name('title').text == 'Интернационализация':
+            dict_rating['rating_internationalization'] = ' '.join(rating.find_element_by_class_name('subtitle').text.split(' ')[:-1])
+
+        elif rating.find_element_by_class_name('title').text == 'Инновации':
+            dict_rating['rating_innovation'] = ' '.join(rating.find_element_by_class_name('subtitle').text.split(' ')[:-1])
+    
+    
+        cursor.execute("""UPDATE search_reviews_ratings SET
+                        rating_summary = ?,
+                        rating_education = ?,
+                        rating_brand = ?,
+                        rating_research = ?,
+                        rating_socialization = ?,
+                        rating_internationalization = ?,
+                        rating_innovation = ?
+                        WHERE id = ?""", 
+            (
+                dict_rating.get('rating_summary'), 
+                dict_rating.get('rating_education'), 
+                dict_rating.get('rating_education'), 
+                dict_rating.get('rating_education'), 
+                dict_rating.get('rating_education'), 
+                dict_rating.get('rating_education'), 
+                dict_rating.get('rating_education'), 
+                university
+            )
+        )
+
+    conn.commit()
 
 if __name__ == "__main__":
     main()

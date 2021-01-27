@@ -41,8 +41,8 @@
             <div class="card-footer">
               <small class="text-muted"></small>
                 <p>Кол-во отзывов: 
-                    <span class="badge bg-success">{% if university.sum_opinion_true == None %}0{% else %}{{ university.sum_opinion_true }}{% endif %}</span>|
-                    <span class="badge bg-danger">{% if university.sum_opinion_false == None %}0{% else %}{{ university.sum_opinion_false }}{% endif %}</span>|
+                    <span class="badge bg-success">{{ university.sum_opinion_true|default_if_none:"0" }}</span>|
+                    <span class="badge bg-danger">{{ university.sum_opinion_false|default_if_none:"0" }}</span>|
                     <span class="badge bg-dark">{{ university.count_opinions }}</span>
                 </p>
               </small>
