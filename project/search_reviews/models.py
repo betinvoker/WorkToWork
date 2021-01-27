@@ -43,5 +43,16 @@ class Ratings(models.Model):
         verbose_name = "Рейтинги университета"
         verbose_name_plural = "Рейтинги университетов"
 
+        ordering = [
+            ['name'],
+            ['-rating_summary'],
+            ['-rating_education'],
+            ['-rating_brand'],
+            ['-rating_research'],
+            ['-rating_socialization'],
+            ['-rating_internationalization'],
+            ['-rating_innovation'],
+        ]
+
     def __str__(self):
         return f"{self.id}, {self.name}, {self.link} , {self.rating_summary} , {self.rating_education} , {self.rating_brand} , {self.rating_research} , {self.rating_socialization} , {self.rating_internationalization} , {self.rating_innovation}"

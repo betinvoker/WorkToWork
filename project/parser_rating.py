@@ -3,9 +3,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-import sqlite3
-import os
-import time
+import sqlite3, os, time
 
 path = r"chromedriver.exe"
 driver = webdriver.Chrome(executable_path=path)
@@ -16,10 +14,10 @@ cursor = conn.cursor()
 
 def main():
     driver.get("https://academia.interfax.ru/ru/ratings/?rating=0&page=1")
-    #delete_ratings()
-    #reset_auto_increment_ratings()
+    delete_ratings()
+    reset_auto_increment_ratings()
     #   Заполнение таблицы
-    #parse_ratings()
+    parse_ratings()
     #   Обновление записей об университете
     change_ratings()
     #   Закрыть браузер после выполнения
@@ -107,27 +105,26 @@ def update_university(university):
         elif rating.find_element_by_class_name('title').text == 'Инновации':
             dict_rating['rating_innovation'] = ' '.join(rating.find_element_by_class_name('subtitle').text.split(' ')[:-1])
     
-    
-        cursor.execute("""UPDATE search_reviews_ratings SET
-                        rating_summary = ?,
-                        rating_education = ?,
-                        rating_brand = ?,
-                        rating_research = ?,
-                        rating_socialization = ?,
-                        rating_internationalization = ?,
-                        rating_innovation = ?
-                        WHERE id = ?""", 
-            (
-                dict_rating.get('rating_summary'), 
-                dict_rating.get('rating_education'), 
-                dict_rating.get('rating_education'), 
-                dict_rating.get('rating_education'), 
-                dict_rating.get('rating_education'), 
-                dict_rating.get('rating_education'), 
-                dict_rating.get('rating_education'), 
-                university
-            )
+    cursor.execute("""UPDATE search_reviews_ratings SET
+                    rating_summary = ?,
+                    rating_education = ?,
+                    rating_brand = ?,
+                    rating_research = ?,
+                    rating_socialization = ?,
+                    rating_internationalization = ?,
+                    rating_innovation = ?
+                    WHERE id = ?""", 
+        (
+            dict_rating.get('rating_summary'), 
+            dict_rating.get('rating_education'), 
+            dict_rating.get('rating_brand'), 
+            dict_rating.get('rating_research'), 
+            dict_rating.get('rating_socialization'), 
+            dict_rating.get('rating_internationalization'), 
+            dict_rating.get('rating_innovation'), 
+            university
         )
+    )
 
     conn.commit()
 
