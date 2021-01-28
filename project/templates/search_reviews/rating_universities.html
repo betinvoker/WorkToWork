@@ -37,8 +37,8 @@
             <th style="margin: 0%; padding: 0%">
                 <form action="{% url 'ratings' %}">
                     <input type="hidden" name="search" value="{{ search_query }}">
-                    <button type="submit" class="btn btn{% if order != '-rating_brand' and order != 'rating_brand' %}-outline{% endif %}-btn-outline-secondary col-12 border-0" 
-                        style="border-radius: 0px" name="order" value="{% if order == '-rating_brand' %}rating_brand{% else %}-rating_brand{% endif %}">
+                    <button type="submit" class="btn btn{% if order != '-rating_education' and order != 'rating_education' %}-outline{% endif %}-btn-outline-secondary col-12 border-0" 
+                        style="border-radius: 0px" name="order" value="{% if order == '-rating_education' %}rating_education{% else %}-rating_education{% endif %}">
                         <small class="text-center"><strong>{{ table_header.4.verbose_name}}</strong></small>
                     </button>
                 </form>
@@ -46,22 +46,54 @@
             <th style="margin: 0%; padding: 0%">
                 <form action="{% url 'ratings' %}">
                     <input type="hidden" name="search" value="{{ search_query }}">
-                    <button type="submit" class="btn btn{% if order != '-rating_education' and order != 'rating_education' %}-outline{% endif %}-btn-outline-secondary col-12 border-0" 
-                        style="border-radius: 0px" name="order" value="{% if order == '-rating_education' %}rating_education{% else %}-rating_education{% endif %}">
+                    <button type="submit" class="btn btn{% if order != '-rating_brand' and order != 'rating_brand' %}-outline{% endif %}-btn-outline-secondary col-12 border-0" 
+                        style="border-radius: 0px" name="order" value="{% if order == '-rating_brand' %}rating_brand{% else %}-rating_brand{% endif %}">
                         <small class="text-center"><strong>{{ table_header.5.verbose_name}}</strong></small>
                     </button>
                 </form>
             </th>
-            <th scope="col"><small>Исследования</small></th>
-            <th scope="col"><small>Социализация</small></th>
-            <th scope="col"><small>Интернационализация</small></th>
-            <th scope="col"><small>Инновации</small></th>
+            <th style="margin: 0%; padding: 0%">
+                <form action="{% url 'ratings' %}">
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                    <button type="submit" class="btn btn{% if order != '-rating_research' and order != 'rating_research' %}-outline{% endif %}-btn-outline-secondary col-12 border-0" 
+                        style="border-radius: 0px" name="order" value="{% if order == '-rating_research' %}rating_research{% else %}-rating_research{% endif %}">
+                        <small class="text-center"><strong>{{ table_header.6.verbose_name}}</strong></small>
+                    </button>
+                </form>
+            </th>
+            <th style="margin: 0%; padding: 0%">
+                <form action="{% url 'ratings' %}">
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                    <button type="submit" class="btn btn{% if order != '-rating_socialization' and order != 'rating_socialization' %}-outline{% endif %}-btn-outline-secondary col-12 border-0" 
+                        style="border-radius: 0px" name="order" value="{% if order == '-rating_socialization' %}rating_socialization{% else %}-rating_socialization{% endif %}">
+                        <small class="text-center"><strong>{{ table_header.7.verbose_name}}</strong></small>
+                    </button>
+                </form>
+            </th>
+            <th style="margin: 0%; padding: 0%">
+                <form action="{% url 'ratings' %}">
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                    <button type="submit" class="btn btn{% if order != '-rating_internationalization' and order != 'rating_internationalization' %}-outline{% endif %}-btn-outline-secondary col-12 border-0" 
+                        style="border-radius: 0px" name="order" value="{% if order == '-rating_internationalization' %}rating_internationalization{% else %}-rating_internationalization{% endif %}">
+                        <small class="text-center"><strong>{{ table_header.8.verbose_name}}</strong></small>
+                    </button>
+                </form>
+            </th>
+            <th style="margin: 0%; padding: 0%">
+                <form action="{% url 'ratings' %}">
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                    <button type="submit" class="btn btn{% if order != '-rating_innovation' and order != 'rating_innovation' %}-outline{% endif %}-btn-outline-secondary col-12 border-0" 
+                        style="border-radius: 0px" name="order" value="{% if order == '-rating_innovation' %}rating_innovation{% else %}-rating_innovation{% endif %}">
+                        <small class="text-center"><strong>{{ table_header.9.verbose_name}}</strong></small>
+                    </button>
+                </form>
+            </th>
         </tr>
     </thead>
     <tbody>
         {% for university in rating %}
         <tr>
-          <th scope="row"><small>{{university.id}}</small></th>
+          <th scope="row"><small>{{forloop.counter}}</small></th>
           <td><small>{{university.name}}</small></td>
           <td><small>{{university.rating_summary}}</small></td>
           <td><small>{{university.rating_education}}</small></td>

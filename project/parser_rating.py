@@ -13,7 +13,7 @@ conn = sqlite3.connect('db.sqlite3')
 cursor = conn.cursor()
 
 def main():
-    driver.get("https://academia.interfax.ru/ru/ratings/?rating=0&page=1")
+    driver.get("https://academia.interfax.ru/ru/ratings/?rating=0&page=0")
     delete_ratings()
     reset_auto_increment_ratings()
     #   Заполнение таблицы
@@ -28,17 +28,22 @@ def parse_ratings():
     nav = driver.find_element_by_class_name('pagination')
     pages = nav.find_elements_by_class_name('page')
 
+    item = 2
+
     for page in pages:
         block = driver.find_element_by_class_name('main')
         universiteties = block.find_elements_by_class_name('-rating')
+        btn = driver.find_element_by_xpath('/html/body/div[1]/div[4]/div/section/main/nav/a[%s]' % str(item))
 
-        if pages.index(page) > 1:
-            for university in universiteties:
-                dict_university = take_data_university(university, universiteties.index(university) + 1)
-                adding_rating(dict_university.get('name'), dict_university.get('link'))
-                print("%s|%s\n" % (dict_university.get('name'), dict_university.get('link')))
-            driver.get("https://academia.interfax.ru/ru/ratings/?page=%s&rating=0&year=2020" % str(pages.index(page)))
-            time.sleep(5)
+        for university in universiteties:
+            dict_university = take_data_university(university, universiteties.index(university) + 1)
+            adding_rating(dict_university.get('name'), dict_university.get('link'))
+            print("%s|%s\n" % (dict_university.get('name'), dict_university.get('link')))
+
+        item += 1
+
+        btn.click()
+        time.sleep(2)
 
     conn.commit()
 
