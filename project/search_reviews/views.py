@@ -11,7 +11,7 @@ from django.db.models import Q
 class UniversitiesListView(ListView):
     context_object_name = 'universities'
     template_name = "search_reviews/index.html"
-    
+
     queryset = Universities.objects.raw("""SELECT search_reviews_universities.*, COUNT(search_reviews_opinions.id) AS count_opinions,
         SUM(search_reviews_opinions.status = "True") as sum_opinion_true,
         SUM(search_reviews_opinions.status = "False") as sum_opinion_false
@@ -38,8 +38,8 @@ class OpinionsListView(ListView):
     def get(self, request, id, *args, **kwargs):
         university = Universities.objects.get(id=id)
         opinions = Opinions.objects.filter(university_id = id)
-        positive_opinions = Opinions.objects.filter(university_id = id).filter(status = "True").count
-        negative_opinions = Opinions.objects.filter(university_id = id).filter(status = "False").count
+        positive_opinions = opinions.filter(status = "True").count
+        negative_opinions = opinions.filter(status = "False").count
 
         #   Пагинатор выбирает из таблицы Opinions 5 комментариев, на странице может быть не меньше двух комментариев
         paginator = Paginator(opinions, 5, orphans = 2)
