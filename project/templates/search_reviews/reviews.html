@@ -46,10 +46,16 @@
     <div class="col">
       {% if  opinion.status == "True" %}
         <div class="card col-12 text-black" style="background-color: #bde0d4;">
-          <div class="card-header text-center"><h4>Положительный отзыв</h4></div>
+          <div class="card-header text-center">
+            <h4>Положительный отзыв</h4>
+            <p>Количество слов: {{ opinion.text|wordcount }}</p>
+          </div>
       {% else %}
         <div class="card col-12 text-black" style="background-color:#f5bca7;">
-          <div class="card-header text-center"><h4>Отрицательный отзыв</h4></div>
+          <div class="card-header text-center">
+            <h4>Отрицательный отзыв</h4>
+            <p>Количество слов: {{ opinion.text|wordcount }}</p>
+          </div>
       {% endif %}
           <div class="card-body">
             <p class="card-text">{{ opinion.text }}</p>
