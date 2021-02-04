@@ -1,10 +1,30 @@
 from django.db import models
 
+class UniversitiesManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().raw("""SELECT search_reviews_universities.*, COUNT(search_reviews_opinions.id) AS count_opinions,
+            SUM(search_reviews_opinions.status = "True") as sum_opinion_true,
+            SUM(search_reviews_opinions.status = "False") as sum_opinion_false
+            FROM search_reviews_universities LEFT JOIN search_reviews_opinions ON search_reviews_universities.id = search_reviews_opinions.university_id
+            GROUP BY search_reviews_universities.id""")
+
+class PopularUniversitiesManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().raw("""SELECT search_reviews_universities.id, abbreviated,
+            COUNT(search_reviews_opinions.id) as count_opinion, SUM(search_reviews_opinions.status = "True") as sum_opinion_true,
+            SUM(search_reviews_opinions.status = "False") as sum_opinion_false
+            FROM search_reviews_universities LEFT JOIN search_reviews_opinions ON search_reviews_universities.id = search_reviews_opinions.university_id
+            GROUP BY search_reviews_universities.id ORDER BY count_opinion DESC LIMIT 5""")
+
 class Universities(models.Model):
     abbreviated = models.CharField(max_length=100, verbose_name="Аббревиатура", null=False)
     name = models.CharField(max_length=300, verbose_name="Полное название", null=False)
     link = models.CharField(max_length=300, verbose_name="Ссылка на страницу ресурса", null=False)
     logo = models.CharField(max_length=50, verbose_name="Герб университета", null=False)
+
+    objects = models.Manager()
+    universities_objects = UniversitiesManager()
+    popular_universities_objects = PopularUniversitiesManager()
 
     class Meta:
         verbose_name = "Университет"

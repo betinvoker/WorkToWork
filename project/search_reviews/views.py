@@ -12,21 +12,13 @@ class UniversitiesListView(ListView):
     context_object_name = 'universities'
     template_name = "search_reviews/index.html"
 
-    queryset = Universities.objects.raw("""SELECT search_reviews_universities.*, COUNT(search_reviews_opinions.id) AS count_opinions,
-        SUM(search_reviews_opinions.status = "True") as sum_opinion_true,
-        SUM(search_reviews_opinions.status = "False") as sum_opinion_false
-        FROM search_reviews_universities LEFT JOIN search_reviews_opinions ON search_reviews_universities.id = search_reviews_opinions.university_id
-        GROUP BY search_reviews_universities.id""")
+    queryset = Universities.universities_objects.all()
 
     paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['popular_universities'] = Universities.objects.raw("""SELECT search_reviews_universities.id, abbreviated,
-            COUNT(search_reviews_opinions.id) as count_opinion, SUM(search_reviews_opinions.status = "True") as sum_opinion_true,
-            SUM(search_reviews_opinions.status = "False") as sum_opinion_false
-            FROM search_reviews_universities LEFT JOIN search_reviews_opinions ON search_reviews_universities.id = search_reviews_opinions.university_id
-            GROUP BY search_reviews_universities.id ORDER BY count_opinion DESC LIMIT 5""")
+        context['popular_universities'] = Universities.popular_universities_objects.all()
 
         return context
 
