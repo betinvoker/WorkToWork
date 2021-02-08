@@ -9,12 +9,11 @@ from django.db.models import Q
 
 #   Главная страница
 class UniversitiesListView(ListView):
-    context_object_name = 'universities'
     template_name = "search_reviews/index.html"
-
-    queryset = Universities.universities_objects.all()
-
     paginate_by = 10
+
+    def get_queryset(self):
+        return Universities.universities_objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -24,7 +23,6 @@ class UniversitiesListView(ListView):
 
 #   Выбранный университет
 class OpinionsListView(ListView):
-    context_object_name = 'university'
     template_name = "search_reviews/reviews.html"
 
     def get(self, request, id, *args, **kwargs):
