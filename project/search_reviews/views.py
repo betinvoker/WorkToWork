@@ -61,3 +61,15 @@ class RatingUniversitiesView(View):
         table_header = Ratings._meta.get_fields()
 
         return render(request, "search_reviews/rating_universities.html", context = {"table_header" : table_header, "rating" : rating})
+
+class Search(ListView):
+    template_name = "search_reviews/search.html"
+    paginate_by = 12
+
+    def get_queryset(self):
+        return Universities.objects.filter(abbreviated__icontains = self.request.GET.get("q"))
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["q"] = f'q={self.request.GET.get("q")}&'
+        return context
