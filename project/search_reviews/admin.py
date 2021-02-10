@@ -43,4 +43,18 @@ class RatingsAdmin(admin.ModelAdmin):
         "rating_research", "rating_socialization", "rating_internationalization", "rating_innovation")
     list_display_links = ("id", "name")
     search_fields = ("name",)
+    readonly_fields = ("link", "rating_summary", "rating_education", "rating_brand", "rating_research",
+        "rating_socialization", "rating_internationalization", "rating_innovation")
     empty_value_display = "---"
+
+    fieldsets = (
+        (None, {
+            "fields" : ("name", "link")
+        }),
+        ("Рейтинг", {
+            "fields" : (("rating_education", "rating_brand", "rating_research"), ("rating_socialization", "rating_internationalization", "rating_innovation"),)
+        }),
+        ("Сводный рейтинг", {
+            "fields" : ("rating_summary",)
+        })
+    )

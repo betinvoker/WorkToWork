@@ -50,7 +50,7 @@ class Opinions(models.Model):
 
 class Ratings(models.Model):
     name = models.TextField(verbose_name="Название университета", null=False)
-    link = models.TextField(verbose_name="Ссылка на его страницу", null=False)
+    link = models.CharField(max_length=160, verbose_name="Ссылка на его страницу", null=False)
     rating_summary = models.IntegerField(verbose_name="Сводный рейтинг", null=True)
     rating_education = models.IntegerField(verbose_name="Образование", null=True)
     rating_brand = models.IntegerField(verbose_name="Бренд", null=True)
@@ -64,4 +64,4 @@ class Ratings(models.Model):
         verbose_name_plural = "Рейтинги университетов"
 
     def __str__(self):
-        return f"{self.id}, {self.name}, {self.link} , {self.rating_summary} , {self.rating_education} , {self.rating_brand} , {self.rating_research} , {self.rating_socialization} , {self.rating_internationalization} , {self.rating_innovation}"
+        return f"{self.id}, {self.name}, {self.link}, {self.rating_summary}, {self.rating_education}, {self.rating_brand}, {self.rating_research}, {self.rating_socialization}, {self.rating_internationalization}, {self.rating_innovation}"
