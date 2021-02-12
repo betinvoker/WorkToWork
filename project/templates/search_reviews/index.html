@@ -43,7 +43,7 @@
                 <p class="status_badge" style="font-size: 12pt;">
                   Положительные: <span style="color: green;">{{ university.sum_opinion_true|default_if_none:"0" }}</span> |
                   Отрицательные: <span style="color: red;">{{ university.sum_opinion_false|default_if_none:"0" }}</span> |
-                  Все: <span style="color: black;">{{ university.count_opinions }}</span>
+                  Все: <span style="color: gray;">{{ university.count_opinions }}</span>
                 </p>   
               </small>
             </div>
