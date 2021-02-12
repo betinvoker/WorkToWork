@@ -28,11 +28,18 @@ class OpinionsListView(ListView):
     def get(self, request, id, *args, **kwargs):
         university = Universities.objects.get(id=id)
         opinions = Opinions.objects.filter(university_id = id)
+        status = self.request.GET.get("status")
+
+        if status != None:
+            filter_status = Opinions.objects.filter(university_id = id).filter(status = status)
+        else:
+            filter_status = Opinions.objects.filter(university_id = id)
+
         positive_opinions = opinions.filter(status = "True").count
         negative_opinions = opinions.filter(status = "False").count
 
         #   Пагинатор выбирает из таблицы Opinions 5 комментариев, на странице может быть не меньше двух комментариев
-        paginator = Paginator(opinions, 5, orphans = 2)
+        paginator = Paginator(filter_status, 5, orphans = 2)
 
         page_number = request.GET.get('page')
         try:
@@ -43,7 +50,7 @@ class OpinionsListView(ListView):
             page_obj = paginator.page(paginator.num_pages)
 
         return render(request, "search_reviews/reviews.html", context = { "page_obj" : page_obj, "university" : university, "opinions" : opinions,
-                                 "positive_opinions" : positive_opinions, "negative_opinions" : negative_opinions })
+                                 "positive_opinions" : positive_opinions, "negative_opinions" : negative_opinions, "status" : status})
 
 #   Страница поиска университетов
 class Search(ListView):
@@ -51,7 +58,7 @@ class Search(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        query = (Q(abbreviated__icontains = self.request.GET.get("q")) | Q(name__icontains=self.request.GET.get("q")))
+        query = (Q(abbreviated__icontains = self.request.GET.get("q")) | Q(name__icontains = self.request.GET.get("q")))
         return Universities.objects.filter(query)
     
     def get_context_data(self, *args, **kwargs):
