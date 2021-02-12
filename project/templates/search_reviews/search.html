@@ -1,9 +1,9 @@
 <!-- Подключение шаблона страницы -->
 {% extends "base.html" %}
 <!-- Название вкладки страницы -->
-{% block title %}Главная страница{% endblock title %}
+{% block title %}Поиск {{ q|cut:"&"|cut:"q=" }}{% endblock title %}
 <!-- Заголовок страницы -->
-{% block header %}Главная{% endblock header %}
+{% block header %}Поиск{% endblock header %}
 <!-- Контент страницы с основной информацией -->
 {% block content_center %}
 <div class="row justify-content-center" style="margin-top: 80px;">
